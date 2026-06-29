@@ -26,7 +26,7 @@ export default function Home() {
     setError('');
 
     try {
-      const res = await fetch('/api/shorten', {
+      const res = await fetch('/short-link/api/shorten', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ originalUrl }),
