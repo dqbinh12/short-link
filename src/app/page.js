@@ -78,7 +78,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#e0e7ff] relative overflow-hidden flex items-center justify-center p-4">
+    <main className="min-h-screen bg-[#e0e7ff] relative overflow-x-hidden flex items-center justify-center p-4 py-8">
 
       {/* Mesh Gradient Background */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-400/30 rounded-full blur-[120px] mix-blend-multiply filter opacity-70 animate-blob"></div>
@@ -86,10 +86,10 @@ export default function Home() {
       <div className="absolute bottom-[-20%] left-[20%] w-[50%] h-[50%] bg-indigo-400/30 rounded-full blur-[120px] mix-blend-multiply filter opacity-70 animate-blob animation-delay-4000"></div>
 
       {/* Main Glassmorphism Container */}
-      <div className="relative w-full max-w-6xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl overflow-hidden flex flex-col lg:flex-row h-auto lg:min-h-[600px]">
+      <div className="relative w-full max-w-[1024px] bg-white/30 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl overflow-hidden flex flex-col lg:flex-row h-auto lg:min-h-[600px]">
 
         {/* Left Column: Input, Results & CONTROLS */}
-        <div className="w-full lg:w-5/12 p-8 lg:p-12 flex flex-col border-b lg:border-b-0 lg:border-r border-white/20 bg-white/20 overflow-y-auto max-h-[90vh]">
+        <div className="w-full lg:w-5/12 p-8 lg:p-12 flex flex-col border-b lg:border-b-0 lg:border-r border-white/20 bg-white/20">
 
           <div className="mb-6">
             <h1 className="text-2xl lg:text-3xl font-bold text-slate-800 tracking-tight leading-tight">

@@ -38,7 +38,7 @@ export async function POST(req) {
         await newUrl.save();
 
         const { headers } = req;
-        const proto = headers.get('x-forwarded-proto') || 'http';
+        const proto = headers.get('x-forwarded-proto') || 'https';
         const host = headers.get('host') || 'localhost:3000';
         const baseUrl = process.env.BASE_URL || `${proto}://${host}`;
         const shortUrl = `${baseUrl}/short-link/${shortCode}`;

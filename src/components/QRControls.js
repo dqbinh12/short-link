@@ -77,7 +77,7 @@ const QRControls = ({
                     <input
                         type="range"
                         min="128"
-                        max="512"
+                        max="1024"
                         value={size}
                         onChange={(e) => setSize(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-500"
