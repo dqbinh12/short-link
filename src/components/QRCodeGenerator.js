@@ -1,74 +1,73 @@
 'use client';
 
-import React, { useRef, useImperativeHandle, forwardRef } from 'react';
-import { QRCodeCanvas } from 'qrcode.react';
+import React, { useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 
 const PREVIEW_SIZE = 256;
 
 const QRCodeGenerator = forwardRef(({
-    url,
-    fgColor,
-    bgColor,
-    size,
-    margin,
-    logo
+  url,
+  fgColor,
+  bgColor,
+  size,
+  margin,
+  level = 'H',
+  logo,
+  dotStyle = 'square',
+  cornerSquareStyle = 'square',
+  cornerDotStyle = 'square',
 }, ref) => {
-    const hiddenRef = useRef();
+  const previewRef = useRef(null);
+  const qrInstance = useRef(null);
 
-    useImperativeHandle(ref, () => ({
-        querySelector: (selector) => hiddenRef.current.querySelector(selector)
-    }));
+  const buildConfig = (renderSize) => ({
+    width: renderSize,
+    height: renderSize,
+    data: url || 'https://example.com',
+    qrOptions: { errorCorrectionLevel: level },
+    dotsOptions: { color: fgColor, type: dotStyle },
+    cornersSquareOptions: { color: fgColor, type: cornerSquareStyle },
+    cornersDotOptions: { color: fgColor, type: cornerDotStyle },
+    backgroundOptions: { color: bgColor },
+    image: logo || undefined,
+    imageOptions: { crossOrigin: 'anonymous', margin: 4 },
+    margin: margin ? 10 : 0,
+  });
 
-    const imageSettings = logo ? {
-        src: logo,
-        x: undefined,
-        y: undefined,
-        height: size * 0.22,
-        width: size * 0.22,
-        excavate: true,
-    } : undefined;
+  useEffect(() => {
+    if (!previewRef.current) return;
 
-    const previewImageSettings = logo ? {
-        src: logo,
-        x: undefined,
-        y: undefined,
-        height: PREVIEW_SIZE * 0.22,
-        width: PREVIEW_SIZE * 0.22,
-        excavate: true,
-    } : undefined;
+    import('qr-code-styling').then(({ default: QRCodeStyling }) => {
+      const config = buildConfig(PREVIEW_SIZE);
+      if (!qrInstance.current) {
+        qrInstance.current = new QRCodeStyling(config);
+        previewRef.current.innerHTML = '';
+        qrInstance.current.append(previewRef.current);
+      } else {
+        qrInstance.current.update(config);
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, fgColor, bgColor, margin, level, logo, dotStyle, cornerSquareStyle, cornerDotStyle]);
 
-    return (
-        <div className="flex flex-col items-center justify-center bg-white/50 backdrop-blur-md p-8 rounded-2xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl">
-            {/* Visible preview - fixed size */}
-            <div className="bg-white p-4 rounded-xl shadow-sm">
-                <QRCodeCanvas
-                    value={url || 'https://example.com'}
-                    size={PREVIEW_SIZE}
-                    bgColor={bgColor}
-                    fgColor={fgColor}
-                    includeMargin={margin}
-                    level={"H"}
-                    imageSettings={previewImageSettings}
-                />
-            </div>
-            <p className="mt-4 text-xs text-slate-500 font-mono truncate max-w-[250px] bg-slate-100/50 px-2 py-1 rounded">
-                {url || 'https://example.com'}
-            </p>
+  useImperativeHandle(ref, () => ({
+    download: (extension) => {
+      import('qr-code-styling').then(({ default: QRCodeStyling }) => {
+        const dlQr = new QRCodeStyling(buildConfig(size));
+        dlQr.download({ extension, name: 'qrcode' });
+      });
+    },
+  }));
 
-            {/* Hidden high-res canvas for download */}
-            <div ref={hiddenRef} className="hidden">
-                <QRCodeCanvas
-                    value={url || 'https://example.com'}
-                    size={size}
-                    bgColor={bgColor}
-                    fgColor={fgColor}
-                    includeMargin={margin}
-                    level={"H"}
-                    imageSettings={imageSettings}
-                />
-            </div>
-        </div>
-    );
+  return (
+    <div className="flex flex-col items-center justify-center bg-white/50 backdrop-blur-md p-8 rounded-2xl border border-white/40 shadow-xl transition-all duration-300 hover:shadow-2xl">
+      <div className="bg-white p-4 rounded-xl shadow-sm">
+        <div ref={previewRef} style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE }} />
+      </div>
+      <p className="mt-4 text-xs text-slate-500 font-mono truncate max-w-[250px] bg-slate-100/50 px-2 py-1 rounded">
+        {url || 'https://example.com'}
+      </p>
+    </div>
+  );
 });
 
 QRCodeGenerator.displayName = 'QRCodeGenerator';

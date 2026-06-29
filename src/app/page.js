@@ -15,8 +15,12 @@ export default function Home() {
   // QR State
   const [fgColor, setFgColor] = useState('#1e293b');
   const [bgColor, setBgColor] = useState('#ffffff');
-  const [size, setSize] = useState(256);
+  const [size, setSize] = useState(512);
   const [margin, setMargin] = useState(false);
+  const [level, setLevel] = useState('H');
+  const [dotStyle, setDotStyle] = useState('square');
+  const [cornerSquareStyle, setCornerSquareStyle] = useState('square');
+  const [cornerDotStyle, setCornerDotStyle] = useState('square');
   const [logo, setLogo] = useState(null);
   const qrRef = useRef();
 
@@ -64,17 +68,7 @@ export default function Home() {
   };
 
   const downloadQRCode = (extension) => {
-    // Access the canvas via the forwarded ref to QRCodeGenerator
-    const canvas = qrRef.current.querySelector('canvas');
-    if (canvas) {
-      const url = canvas.toDataURL(`image/${extension}`);
-      const link = document.createElement('a');
-      link.download = `qrcode.${extension}`;
-      link.href = url;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    qrRef.current?.download(extension);
   };
 
   return (
@@ -153,6 +147,10 @@ export default function Home() {
                 bgColor={bgColor} setBgColor={setBgColor}
                 size={size} setSize={setSize}
                 margin={margin} setMargin={setMargin}
+                level={level} setLevel={setLevel}
+                dotStyle={dotStyle} setDotStyle={setDotStyle}
+                cornerSquareStyle={cornerSquareStyle} setCornerSquareStyle={setCornerSquareStyle}
+                cornerDotStyle={cornerDotStyle} setCornerDotStyle={setCornerDotStyle}
                 handleLogoUpload={handleLogoUpload}
                 downloadQRCode={downloadQRCode}
               />
@@ -196,7 +194,11 @@ export default function Home() {
                 bgColor={bgColor}
                 size={size}
                 margin={margin}
+                level={level}
                 logo={logo}
+                dotStyle={dotStyle}
+                cornerSquareStyle={cornerSquareStyle}
+                cornerDotStyle={cornerDotStyle}
               />
             </div>
           )}
